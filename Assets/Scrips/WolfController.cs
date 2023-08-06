@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class WolfController : MonoBehaviour
@@ -11,7 +9,6 @@ public class WolfController : MonoBehaviour
     private float lastBoomTime = 0;
     private GameObject Sheep;
     private Animator anim;
-    private GameObject gameController;
 
     // Start is called before the first frame update
     void Start()
@@ -20,7 +17,6 @@ public class WolfController : MonoBehaviour
         Sheep = GameObject.FindGameObjectWithTag("Player");
         anim = gameObject.GetComponent<Animator>();
         anim.SetBool("isBoom", false);
-        gameController = GameObject.FindGameObjectWithTag("GameController");
     }
 
     // Update is called once per frame
@@ -47,7 +43,6 @@ public class WolfController : MonoBehaviour
         GameObject bom = Instantiate(Boom, transform.position, Quaternion.identity) as GameObject;
         bom.GetComponent<BoomController>().target = Sheep.transform.position;
         UpdateBoomTime();
-        gameController.GetComponent<GameController>().GetPoint();
         anim.SetBool("isBoom", false);
     }
 }

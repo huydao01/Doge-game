@@ -1,7 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System.Threading;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
@@ -12,14 +9,16 @@ public class GameController : MonoBehaviour
     public Button Restart;
     public Button GameStart;
     public Button Quit;
-    public Text Point;
-    public Text YourPoint;
-    int GamePoint = 0;
     AudioSource Audio;
+
     private float startTime;
     public Text Timer;
-    string timerString;
     public Text GameTime;
+    public Text HighScore;
+    string timerString;
+    float currentTime = 0;
+    float highscore = 0;
+    
 
     // Start is called before the first frame update
     void Start()
@@ -29,6 +28,7 @@ public class GameController : MonoBehaviour
         Time.timeScale = 0;
         Audio = gameObject.GetComponent<AudioSource>();
         startTime = Time.time;
+        highscore = PlayerPrefs.GetFloat("Score");
     }
 
     // Update is called once per frame
@@ -39,16 +39,25 @@ public class GameController : MonoBehaviour
 
     public void UpdateTime()
     {
-        float currentTime = Time.time - startTime;
+        currentTime = Time.time - startTime;
         int minutes = Mathf.FloorToInt(currentTime / 60);
         int seconds = Mathf.FloorToInt(currentTime % 60);
         timerString = string.Format("{0:00}:{1:00}", minutes, seconds);
         Timer.text = "Time: " + timerString;
     }
-    public void GetPoint()
+    public void Highscore()
     {
-        GamePoint++;
-        Point.text = "Boom: " + GamePoint.ToString();
+        if (currentTime > highscore)
+        {
+            PlayerPrefs.SetFloat("Score", currentTime);
+            PlayerPrefs.SetString("Time", timerString);
+            HighScore.text = "HighScore: " + timerString;
+        }
+        else
+        {
+            string hightime = PlayerPrefs.GetString("Time");
+            HighScore.text = "HighScore: " + hightime;
+        }
     }
     public void StartGame()
     {
@@ -69,6 +78,6 @@ public class GameController : MonoBehaviour
         Time.timeScale = 0;
         End.SetActive(true);
         GameTime.text = "Your Score: " + timerString;
-        YourPoint.text = "Boom: " + GamePoint.ToString();
+        Highscore();
     }
 }
